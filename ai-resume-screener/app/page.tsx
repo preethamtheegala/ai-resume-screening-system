@@ -28,7 +28,7 @@ export default function Home() {
 
       setLoading(true)
 
-      const response = await fetch('http://127.0.0.1:5001/upload-resume', {
+      const response = await fetch('https://ai-resume-screening-system-production-6bf1.up.railway.app/upload-resume', {
         method: 'POST',
         body: formData
       })
