@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Screening System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- LOGIN PAGE -->
+    <section id="loginPage" class="login-page">
+        <div class="login-container">
+            <div class="login-box">
+                <div class="login-header">
+                    <i class="fas fa-brain"></i>
+                    <h1>Resume Screener</h1>
+                    <p>AI-Powered Intelligent Resume Screening</p>
+                </div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email or Username</label>
+                        <input type="text" id="loginEmail" name="email" placeholder="Enter your email" required>
+                        <small class="error-message" id="emailError"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" name="password" placeholder="Enter your password" required>
+                        <small class="error-message" id="passwordError"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="roleSelect">Select Role</label>
+                        <select id="roleSelect" name="role" required>
+                            <option value="">-- Choose Role --</option>
+                            <option value="user">Job Applicant</option>
+                            <option value="hr">HR Manager</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-login">Login</button>
+                </form>
+
+                <div class="demo-credentials">
+                    <p><strong>Demo Credentials:</strong></p>
+                    <p>User: user@example.com | Pass: user123 | Role: Job Applicant</p>
+                    <p>HR: hr@example.com | Pass: hr123 | Role: HR Manager</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- USER SECTION -->
+    <section id="userSection" class="hidden">
+        <!-- USER NAVBAR -->
+        <nav class="navbar navbar-user">
+            <div class="navbar-container">
+                <div class="navbar-brand">
+                    <i class="fas fa-brain"></i>
+                    <span>Resume Screener</span>
+                </div>
+
+                <button class="navbar-toggle" id="navbarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <ul class="navbar-menu" id="navbarMenu">
+                    <li><a href="#" onclick="openUserPage('dashboard'); return false;"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#" onclick="openUserPage('profile'); return false;"><i class="fas fa-user"></i> Profile</a></li>
+                    <li><a href="#" onclick="logout(); return false;"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- USER DASHBOARD PAGE -->
+        <section id="userDashboard" class="user-page page-content">
+            <div class="page-header">
+                <h1>Welcome, <span id="userName">User</span></h1>
+                <p>Manage your resume and track matching opportunities</p>
+            </div>
+
+            <div class="dashboard-cards">
+                <div class="card card-hover">
+                    <div class="card-icon">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <h3>Upload Resume</h3>
+                    <p>Upload your resume for job screening</p>
+                    <button class="btn btn-primary" onclick="openUserPage('upload')">Upload Now</button>
+                </div>
+
+                <div class="card card-hover">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3>Match Results</h3>
+                    <p>View your resume matching scores</p>
+                    <button class="btn btn-primary" onclick="openUserPage('results')">View Results</button>
+                </div>
+
+                <div class="card card-hover">
+                    <div class="card-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Selection Status</h3>
+                    <p>Check your selection status for positions</p>
+                    <button class="btn btn-secondary" onclick="openUserPage('status')">Check Status</button>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Positions Applied</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Matched</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">85%</div>
+                    <div class="stat-label">Avg Match Score</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- USER RESUME UPLOAD PAGE -->
+        <section id="userUpload" class="user-page page-content hidden">
+            <div class="page-header">
+                <h1>Upload Your Resume</h1>
+                <p>Drag and drop your resume or click to browse</p>
+            </div>
+
+            <div class="upload-container">
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Drag and Drop Resume Here</h3>
+                    <p>or click to select file</p>
+                    <input type="file" id="fileInput" accept=".pdf,.doc,.docx" class="hidden-input">
+                </div>
+
+                <div id="filePreview" class="file-preview hidden">
+                    <div class="preview-item">
+                        <i class="fas fa-file"></i>
+                        <div>
+                            <p id="fileName" class="file-name"></p>
+                            <p id="fileSize" class="file-size"></p>
+                        </div>
+                        <button type="button" class="btn-icon" onclick="clearFile()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <p id="uploadStatus" class="upload-status"></p>
+                </div>
+
+                <div class="upload-form">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" placeholder="Enter your full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="Enter your email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" placeholder="Enter your phone number">
+                    </div>
+
+                    <button class="btn btn-primary btn-wide" onclick="uploadResume()">Upload Resume</button>
+                    <button class="btn btn-secondary btn-wide" onclick="openUserPage('dashboard')">Back to Dashboard</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- USER MATCH RESULTS PAGE -->
+        <section id="userResults" class="user-page page-content hidden">
+            <div class="page-header">
+                <h1>Your Match Results</h1>
+                <p>AI-powered resume matching analysis</p>
+            </div>
+
+            <div class="results-grid">
+                <div class="result-card">
+                    <h3>Software Engineer Position</h3>
+                    <div class="match-circle">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" class="circle-background"></circle>
+                            <circle cx="50" cy="50" r="45" class="circle-progress" style="--percentage: 88;"></circle>
+                        </svg>
+                        <div class="circle-text">
+                            <span class="percentage">88%</span>
+                            <span class="label">Match</span>
+                        </div>
+                    </div>
+
+                    <div class="result-details">
+                        <div class="detail-item">
+                            <span class="label">Skills Match:</span>
+                            <span class="value">92%</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Experience Match:</span>
+                            <span class="value">85%</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Education Match:</span>
+                            <span class="value">80%</span>
+                        </div>
+                    </div>
+
+                    <div class="skills-section">
+                        <h4>Matched Skills</h4>
+                        <div class="skills-list">
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">React</span>
+                            <span class="skill-tag">Node.js</span>
+                            <span class="skill-tag">REST API</span>
+                            <span class="skill-tag">MongoDB</span>
+                        </div>
+                    </div>
+
+                    <div class="status-badge status-selected">
+                        <i class="fas fa-check-circle"></i> Selected
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <h3>Full Stack Developer Role</h3>
+                    <div class="match-circle">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" class="circle-background"></circle>
+                            <circle cx="50" cy="50" r="45" class="circle-progress" style="--percentage: 76;"></circle>
+                        </svg>
+                        <div class="circle-text">
+                            <span class="percentage">76%</span>
+                            <span class="label">Match</span>
+                        </div>
+                    </div>
+
+                    <div class="result-details">
+                        <div class="detail-item">
+                            <span class="label">Skills Match:</span>
+                            <span class="value">78%</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Experience Match:</span>
+                            <span class="value">74%</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Education Match:</span>
+                            <span class="value">75%</span>
+                        </div>
+                    </div>
+
+                    <div class="skills-section">
+                        <h4>Matched Skills</h4>
+                        <div class="skills-list">
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">React</span>
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">PostgreSQL</span>
+                        </div>
+                    </div>
+
+                    <div class="status-badge status-pending">
+                        <i class="fas fa-hourglass-half"></i> Under Review
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <h3>Data Analyst Position</h3>
+                    <div class="match-circle">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" class="circle-background"></circle>
+                            <circle cx="50" cy="50" r="45" class="circle-progress" style="--percentage: 62;"></circle>
+                        </svg>
+                        <div class="circle-text">
+                            <span class="percentage">62%</span>
+                            <span class="label">Match</span>
+                        </div>
+                    </div>
+
+                    <div class="result-details">
+                        <div class="detail-item">
+                            <span class="label">Skills Match:</span>
+                            <span class="value">65%</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Experience Match:</span>
+                            <span class="value">58%</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Education Match:</span>
+                            <span class="value">62%</span>
+                        </div>
+                    </div>
+
+                    <div class="skills-section">
+                        <h4>Matched Skills</h4>
+                        <div class="skills-list">
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">SQL</span>
+                            <span class="skill-tag">Excel</span>
+                        </div>
+                    </div>
+
+                    <div class="status-badge status-rejected">
+                        <i class="fas fa-times-circle"></i> Not Selected
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-secondary btn-wide" onclick="openUserPage('dashboard')">Back to Dashboard</button>
+        </section>
+
+        <!-- USER PROFILE PAGE -->
+        <section id="userProfile" class="user-page page-content hidden">
+            <div class="page-header">
+                <h1>Your Profile</h1>
+                <p>Manage your account information</p>
+            </div>
+
+            <div class="profile-container">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h2 id="profileName">John Doe</h2>
+                        <p id="profileEmail">john@example.com</p>
+                    </div>
+
+                    <div class="profile-details">
+                        <div class="detail-row">
+                            <label>Phone:</label>
+                            <p>+1 (555) 123-4567</p>
+                        </div>
+                        <div class="detail-row">
+                            <label>Location:</label>
+                            <p>San Francisco, CA</p>
+                        </div>
+                        <div class="detail-row">
+                            <label>Experience:</label>
+                            <p>5+ years in Software Development</p>
+                        </div>
+                        <div class="detail-row">
+                            <label>Member Since:</label>
+                            <p>January 2024</p>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-wide">Edit Profile</button>
+                </div>
+            </div>
+
+            <button class="btn btn-secondary btn-wide" onclick="openUserPage('dashboard')">Back to Dashboard</button>
+        </section>
+
+        <!-- USER STATUS PAGE -->
+        <section id="userStatus" class="user-page page-content hidden">
+            <div class="page-header">
+                <h1>Selection Status</h1>
+                <p>Track your application status across positions</p>
+            </div>
+
+            <div class="status-container">
+                <div class="status-timeline">
+                    <div class="timeline-item status-completed">
+                        <div class="timeline-marker">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Resume Submitted</h4>
+                            <p>March 15, 2024</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item status-completed">
+                        <div class="timeline-marker">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>AI Screening Completed</h4>
+                            <p>March 16, 2024</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item status-active">
+                        <div class="timeline-marker">
+                            <i class="fas fa-spinner"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>HR Review in Progress</h4>
+                            <p>Started March 17, 2024</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item status-pending">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Interview Scheduling</h4>
+                            <p>Pending</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-secondary btn-wide" onclick="openUserPage('dashboard')">Back to Dashboard</button>
+        </section>
+    </section>
+
+    <!-- HR SECTION -->
+    <section id="hrSection" class="hidden">
+        <!-- HR NAVBAR -->
+        <nav class="navbar navbar-hr">
+            <div class="navbar-container">
+                <div class="navbar-brand">
+                    <i class="fas fa-brain"></i>
+                    <span>Resume Screener - HR Panel</span>
+                </div>
+
+                <button class="navbar-toggle" id="hrNavbarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <ul class="navbar-menu" id="hrNavbarMenu">
+                    <li><a href="#" onclick="openHRPage('dashboard'); return false;"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#" onclick="logout(); return false;"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="hr-container">
+            <!-- HR SIDEBAR -->
+            <aside class="hr-sidebar" id="hrSidebar">
+                <div class="sidebar-header">
+                    <h3>HR Manager</h3>
+                    <button class="sidebar-close" id="sidebarClose" onclick="toggleSidebar()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <a href="#" onclick="openHRPage('dashboard'); return false;" class="sidebar-link active">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#" onclick="openHRPage('jobdesc'); return false;" class="sidebar-link">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Upload Job Description</span>
+                    </a>
+                    <a href="#" onclick="openHRPage('resumes'); return false;" class="sidebar-link">
+                        <i class="fas fa-file-pdf"></i>
+                        <span>Resume Management</span>
+                    </a>
+                    <a href="#" onclick="openHRPage('ranking'); return false;" class="sidebar-link">
+                        <i class="fas fa-ranking-star"></i>
+                        <span>Sorting & Ranking</span>
+                    </a>
+                    <a href="#" onclick="openHRPage('selected'); return false;" class="sidebar-link">
+                        <i class="fas fa-check-double"></i>
+                        <span>Selected Candidates</span>
+                    </a>
+                    <a href="#" onclick="openHRPage('pending'); return false;" class="sidebar-link">
+                        <i class="fas fa-clock"></i>
+                        <span>Pending Reviews</span>
+                    </a>
+                    <a href="#" onclick="openHRPage('export'); return false;" class="sidebar-link">
+                        <i class="fas fa-download"></i>
+                        <span>Export Results</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- HR CONTENT -->
+            <main class="hr-content">
+                <!-- HR DASHBOARD -->
+                <section id="hrDashboard" class="hr-page page-content">
+                    <div class="page-header">
+                        <h1>HR Dashboard</h1>
+                        <p>Resume screening and candidate management system</p>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card-large">
+                            <div class="stat-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <h3>Total Resumes</h3>
+                            <p class="stat-value">127</p>
+                            <small>Uploaded this month</small>
+                        </div>
+
+                        <div class="stat-card-large">
+                            <div class="stat-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <h3>Selected</h3>
+                            <p class="stat-value">23</p>
+                            <small>Ready for interviews</small>
+                        </div>
+
+                        <div class="stat-card-large">
+                            <div class="stat-icon">
+                                <i class="fas fa-hourglass-half"></i>
+                            </div>
+                            <h3>Pending Review</h3>
+                            <p class="stat-value">45</p>
+                            <small>Awaiting HR decision</small>
+                        </div>
+
+                        <div class="stat-card-large">
+                            <div class="stat-icon">
+                                <i class="fas fa-times-circle"></i>
+                            </div>
+                            <h3>Rejected</h3>
+                            <p class="stat-value">59</p>
+                            <small>Not matched</small>
+                        </div>
+                    </div>
+
+                    <div class="charts-section">
+                        <div class="chart-container">
+                            <h3>Match Score Distribution</h3>
+                            <div class="chart-bars">
+                                <div class="chart-bar">
+                                    <div class="bar-label">90-100%</div>
+                                    <div class="bar-container">
+                                        <div class="bar-fill" style="width: 35%; background: #10b981;"></div>
+                                    </div>
+                                    <div class="bar-count">45</div>
+                                </div>
+                                <div class="chart-bar">
+                                    <div class="bar-label">70-89%</div>
+                                    <div class="bar-container">
+                                        <div class="bar-fill" style="width: 52%; background: #3b82f6;"></div>
+                                    </div>
+                                    <div class="bar-count">67</div>
+                                </div>
+                                <div class="chart-bar">
+                                    <div class="bar-label">50-69%</div>
+                                    <div class="bar-container">
+                                        <div class="bar-fill" style="width: 45%; background: #f59e0b;"></div>
+                                    </div>
+                                    <div class="bar-count">58</div>
+                                </div>
+                                <div class="chart-bar">
+                                    <div class="bar-label">Below 50%</div>
+                                    <div class="bar-container">
+                                        <div class="bar-fill" style="width: 28%; background: #ef4444;"></div>
+                                    </div>
+                                    <div class="bar-count">36</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-container">
+                            <h3>Application Timeline</h3>
+                            <div class="mini-stats">
+                                <div class="mini-stat">
+                                    <span class="mini-stat-label">This Week</span>
+                                    <span class="mini-stat-value">23</span>
+                                </div>
+                                <div class="mini-stat">
+                                    <span class="mini-stat-label">This Month</span>
+                                    <span class="mini-stat-value">127</span>
+                                </div>
+                                <div class="mini-stat">
+                                    <span class="mini-stat-label">This Year</span>
+                                    <span class="mini-stat-value">456</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <h3>Quick Actions</h3>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="openHRPage('jobdesc')">
+                                <i class="fas fa-plus"></i> Add Job Description
+                            </button>
+                            <button class="btn btn-primary" onclick="openHRPage('resumes')">
+                                <i class="fas fa-search"></i> View Resumes
+                            </button>
+                            <button class="btn btn-secondary" onclick="openHRPage('export')">
+                                <i class="fas fa-download"></i> Export Report
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- HR JOB DESCRIPTION PAGE -->
+                <section id="hrJobDesc" class="hr-page page-content hidden">
+                    <div class="page-header">
+                        <h1>Upload Job Description</h1>
+                        <p>Add new job opening for resume screening</p>
+                    </div>
+
+                    <div class="form-container">
+                        <form id="jobDescForm">
+                            <div class="form-group">
+                                <label for="jobTitle">Job Title *</label>
+                                <input type="text" id="jobTitle" placeholder="e.g., Senior Software Engineer" required>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="jobDepartment">Department *</label>
+                                    <input type="text" id="jobDepartment" placeholder="e.g., Engineering" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="jobLevel">Job Level *</label>
+                                    <select id="jobLevel" required>
+                                        <option value="">-- Select Level --</option>
+                                        <option value="entry">Entry Level</option>
+                                        <option value="mid">Mid Level</option>
+                                        <option value="senior">Senior Level</option>
+                                        <option value="lead">Lead/Manager</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="minExperience">Minimum Experience (Years) *</label>
+                                    <input type="number" id="minExperience" min="0" max="50" placeholder="e.g., 5" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="salary">Salary Range (Optional)</label>
+                                    <input type="text" id="salary" placeholder="e.g., $80K - $120K">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="jobDescription">Job Description *</label>
+                                <textarea id="jobDescription" rows="8" placeholder="Paste the full job description here..." required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="requiredSkills">Required Skills (comma-separated) *</label>
+                                <input type="text" id="requiredSkills" placeholder="e.g., JavaScript, React, Node.js, MongoDB" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="preferredSkills">Preferred Skills (comma-separated)</label>
+                                <input type="text" id="preferredSkills" placeholder="e.g., TypeScript, Docker, AWS">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="qualifications">Education/Qualifications *</label>
+                                <select id="qualifications" required>
+                                    <option value="">-- Select Minimum Qualification --</option>
+                                    <option value="highschool">High School</option>
+                                    <option value="bachelor">Bachelor's Degree</option>
+                                    <option value="masters">Master's Degree</option>
+                                    <option value="phd">PhD</option>
+                                </select>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-check"></i> Submit Job Description
+                                </button>
+                                <button type="reset" class="btn btn-secondary">Reset</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- HR RESUMES MANAGEMENT PAGE -->
+                <section id="hrResumes" class="hr-page page-content hidden">
+                    <div class="page-header">
+                        <h1>Resume Management</h1>
+                        <p>View and manage all submitted resumes</p>
+                    </div>
+
+                    <div class="table-controls">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="Search by name, skills...">
+                        </div>
+
+                        <div class="filter-group">
+                            <select id="filterStatus">
+                                <option value="">All Status</option>
+                                <option value="selected">Selected</option>
+                                <option value="pending">Pending</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+
+                            <select id="filterMatch">
+                                <option value="">All Match Scores</option>
+                                <option value="90">90%+</option>
+                                <option value="70">70-89%</option>
+                                <option value="50">50-69%</option>
+                                <option value="0">Below 50%</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-secondary" onclick="sortResumes('match')">
+                            <i class="fas fa-sort-amount-down"></i> Sort
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="candidates-table">
+                            <thead>
+                                <tr>
+                                    <th>Candidate Name</th>
+                                    <th>Email</th>
+                                    <th>Skills</th>
+                                    <th>Match %</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resumesTableBody">
+                                <!-- Populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="pagination" id="paginationContainer">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- HR SORTING & RANKING PAGE -->
+                <section id="hrRanking" class="hr-page page-content hidden">
+                    <div class="page-header">
+                        <h1>Sorting & Ranking</h1>
+                        <p>Top candidates ranked by match score</p>
+                    </div>
+
+                    <div class="ranking-controls">
+                        <button class="btn btn-secondary" onclick="sortCandidates('match-desc')">
+                            <i class="fas fa-arrow-down"></i> Sort by Match (High to Low)
+                        </button>
+                        <button class="btn btn-secondary" onclick="sortCandidates('match-asc')">
+                            <i class="fas fa-arrow-up"></i> Sort by Match (Low to High)
+                        </button>
+                        <button class="btn btn-secondary" onclick="sortCandidates('recent')">
+                            <i class="fas fa-clock"></i> Recently Added
+                        </button>
+                    </div>
+
+                    <div class="ranking-container">
+                        <div class="top-candidates">
+                            <div class="rank-card rank-1">
+                                <div class="rank-badge">1</div>
+                                <div class="rank-content">
+                                    <h3>Sarah Johnson</h3>
+                                    <p>Senior Software Engineer</p>
+                                    <div class="rank-score">
+                                        <span class="score-text">92% Match</span>
+                                        <div class="score-bar">
+                                            <div class="score-fill" style="width: 92%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="rank-skills">
+                                        <span class="skill-badge">JavaScript</span>
+                                        <span class="skill-badge">React</span>
+                                        <span class="skill-badge">Node.js</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="rank-card rank-2">
+                                <div class="rank-badge">2</div>
+                                <div class="rank-content">
+                                    <h3>Michael Chen</h3>
+                                    <p>Full Stack Developer</p>
+                                    <div class="rank-score">
+                                        <span class="score-text">88% Match</span>
+                                        <div class="score-bar">
+                                            <div class="score-fill" style="width: 88%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="rank-skills">
+                                        <span class="skill-badge">JavaScript</span>
+                                        <span class="skill-badge">React</span>
+                                        <span class="skill-badge">Python</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="rank-card rank-3">
+                                <div class="rank-badge">3</div>
+                                <div class="rank-content">
+                                    <h3>Emily Davis</h3>
+                                    <p>Frontend Developer</p>
+                                    <div class="rank-score">
+                                        <span class="score-text">85% Match</span>
+                                        <div class="score-bar">
+                                            <div class="score-fill" style="width: 85%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="rank-skills">
+                                        <span class="skill-badge">JavaScript</span>
+                                        <span class="skill-badge">React</span>
+                                        <span class="skill-badge">CSS</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="more-candidates">
+                            <h3>More Candidates</h3>
+                            <div id="moreRankedCandidates">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- HR SELECTED CANDIDATES PAGE -->
+                <section id="hrSelected" class="hr-page page-content hidden">
+                    <div class="page-header">
+                        <h1>Selected Candidates</h1>
+                        <p>Candidates who passed the screening</p>
+                    </div>
+
+                    <div class="candidates-grid">
+                        <div class="candidate-card">
+                            <div class="candidate-header">
+                                <div class="candidate-avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div>
+                                    <h3>Sarah Johnson</h3>
+                                    <p>sarah@example.com</p>
+                                </div>
+                            </div>
+
+                            <div class="candidate-info">
+                                <div class="info-row">
+                                    <span class="label">Match Score:</span>
+                                    <span class="value">92%</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Experience:</span>
+                                    <span class="value">6 years</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Applied:</span>
+                                    <span class="value">March 15, 2024</span>
+                                </div>
+                            </div>
+
+                            <div class="candidate-actions">
+                                <button class="btn btn-small btn-primary">Schedule Interview</button>
+                                <button class="btn btn-small btn-secondary">View Resume</button>
+                            </div>
+                        </div>
+
+                        <div class="candidate-card">
+                            <div class="candidate-header">
+                                <div class="candidate-avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div>
+                                    <h3>Michael Chen</h3>
+                                    <p>michael@example.com</p>
+                                </div>
+                            </div>
+
+                            <div class="candidate-info">
+                                <div class="info-row">
+                                    <span class="label">Match Score:</span>
+                                    <span class="value">88%</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Experience:</span>
+                                    <span class="value">5 years</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Applied:</span>
+                                    <span class="value">March 14, 2024</span>
+                                </div>
+                            </div>
+
+                            <div class="candidate-actions">
+                                <button class="btn btn-small btn-primary">Schedule Interview</button>
+                                <button class="btn btn-small btn-secondary">View Resume</button>
+                            </div>
+                        </div>
+
+                        <div class="candidate-card">
+                            <div class="candidate-header">
+                                <div class="candidate-avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div>
+                                    <h3>Emily Davis</h3>
+                                    <p>emily@example.com</p>
+                                </div>
+                            </div>
+
+                            <div class="candidate-info">
+                                <div class="info-row">
+                                    <span class="label">Match Score:</span>
+                                    <span class="value">85%</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Experience:</span>
+                                    <span class="value">4 years</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Applied:</span>
+                                    <span class="value">March 13, 2024</span>
+                                </div>
+                            </div>
+
+                            <div class="candidate-actions">
+                                <button class="btn btn-small btn-primary">Schedule Interview</button>
+                                <button class="btn btn-small btn-secondary">View Resume</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- HR PENDING REVIEWS PAGE -->
+                <section id="hrPending" class="hr-page page-content hidden">
+                    <div class="page-header">
+                        <h1>Pending Reviews</h1>
+                        <p>Resumes awaiting HR decision</p>
+                    </div>
+
+                    <div class="pending-container">
+                        <div class="pending-item">
+                            <div class="pending-header">
+                                <h4>James Wilson</h4>
+                                <span class="match-badge">73%</span>
+                            </div>
+                            <p class="pending-email">james@example.com</p>
+                            <p class="pending-position">Applied for: Software Engineer</p>
+                            <div class="pending-actions">
+                                <button class="btn btn-small btn-primary" onclick="updateCandidateStatus('selected')">
+                                    <i class="fas fa-check"></i> Select
+                                </button>
+                                <button class="btn btn-small btn-secondary" onclick="updateCandidateStatus('rejected')">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                                <button class="btn btn-small btn-tertiary">
+                                    <i class="fas fa-eye"></i> View Resume
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="pending-item">
+                            <div class="pending-header">
+                                <h4>Jessica Martinez</h4>
+                                <span class="match-badge">68%</span>
+                            </div>
+                            <p class="pending-email">jessica@example.com</p>
+                            <p class="pending-position">Applied for: Data Analyst</p>
+                            <div class="pending-actions">
+                                <button class="btn btn-small btn-primary" onclick="updateCandidateStatus('selected')">
+                                    <i class="fas fa-check"></i> Select
+                                </button>
+                                <button class="btn btn-small btn-secondary" onclick="updateCandidateStatus('rejected')">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                                <button class="btn btn-small btn-tertiary">
+                                    <i class="fas fa-eye"></i> View Resume
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="pending-item">
+                            <div class="pending-header">
+                                <h4>Robert Thompson</h4>
+                                <span class="match-badge">71%</span>
+                            </div>
+                            <p class="pending-email">robert@example.com</p>
+                            <p class="pending-position">Applied for: DevOps Engineer</p>
+                            <div class="pending-actions">
+                                <button class="btn btn-small btn-primary" onclick="updateCandidateStatus('selected')">
+                                    <i class="fas fa-check"></i> Select
+                                </button>
+                                <button class="btn btn-small btn-secondary" onclick="updateCandidateStatus('rejected')">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                                <button class="btn btn-small btn-tertiary">
+                                    <i class="fas fa-eye"></i> View Resume
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- HR EXPORT PAGE -->
+                <section id="hrExport" class="hr-page page-content hidden">
+                    <div class="page-header">
+                        <h1>Export Results</h1>
+                        <p>Download screening results in multiple formats</p>
+                    </div>
+
+                    <div class="export-container">
+                        <div class="export-card">
+                            <div class="export-icon">
+                                <i class="fas fa-file-csv"></i>
+                            </div>
+                            <h3>Export as CSV</h3>
+                            <p>Download all candidate data in CSV format for spreadsheet analysis</p>
+                            <button class="btn btn-primary btn-wide" onclick="exportData('csv')">
+                                <i class="fas fa-download"></i> Export CSV
+                            </button>
+                        </div>
+
+                        <div class="export-card">
+                            <div class="export-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <h3>Export as PDF Report</h3>
+                            <p>Generate a comprehensive PDF report of all screening results</p>
+                            <button class="btn btn-primary btn-wide" onclick="exportData('pdf')">
+                                <i class="fas fa-download"></i> Export PDF
+                            </button>
+                        </div>
+
+                        <div class="export-card">
+                            <div class="export-icon">
+                                <i class="fas fa-file-excel"></i>
+                            </div>
+                            <h3>Export Selected Only</h3>
+                            <p>Download only the selected candidates for quick shortlist</p>
+                            <button class="btn btn-primary btn-wide" onclick="exportData('selected')">
+                                <i class="fas fa-download"></i> Export Selected
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="export-options">
+                        <h3>Export Options</h3>
+                        <div class="options-list">
+                            <label>
+                                <input type="checkbox" checked> Include Match Scores
+                            </label>
+                            <label>
+                                <input type="checkbox" checked> Include Skills
+                            </label>
+                            <label>
+                                <input type="checkbox" checked> Include Contact Info
+                            </label>
+                            <label>
+                                <input type="checkbox"> Include Notes
+                            </label>
+                            <label>
+                                <input type="checkbox"> Include Interview Feedback
+                            </label>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </section>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
