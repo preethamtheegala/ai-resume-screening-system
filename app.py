@@ -1,11 +1,10 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from flask_mail import Mail, Message
-
 import os
 import PyPDF2
 import docx
 import mysql.connector
+import resend
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -14,14 +13,7 @@ app = Flask(__name__)
 
 CORS(app)
 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = 'thsreekarp@gmail.com'
-app.config['MAIL_PASSWORD'] = 'taskbqfnbbqftugw'
-
-mail = Mail(app)
+resend.api_key = os.getenv("RESEND_API_KEY")
 
 UPLOAD_FOLDER = 'uploads'
 
@@ -582,15 +574,12 @@ def send_email():
 
         body = data.get('message')
 
-        msg = Message(
-            subject,
-            sender=app.config['MAIL_USERNAME'],
-            recipients=[candidate_email]
-        )
-
-        msg.body = body
-
-        mail.send(msg)
+        resend.Emails.send({
+            "from": "onboarding@resend.dev",
+            "to": [candidate_email],
+            "subject": subject,
+            "html": f"<p>{body}</p>"
+        })
 
         cursor.execute('''
         INSERT INTO email_logs
