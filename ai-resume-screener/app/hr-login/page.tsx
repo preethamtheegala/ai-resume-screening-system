@@ -22,7 +22,7 @@ export default function HRLogin() {
 
       setLoading(true)
 
-      const response = await fetch('https://ai-resume-screening-system-production-6bf1.up.railway.app/hr-login', {
+      const response = await fetch('https://ai-resume-screening-system-production-c250.up.railway.app/hr-login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

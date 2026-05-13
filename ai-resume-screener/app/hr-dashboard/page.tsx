@@ -40,7 +40,7 @@ export default function HRDashboard() {
     try {
 
       const response = await fetch(
-        'https://ai-resume-screening-system-production-6bf1.up.railway.app/analytics'
+        'https://ai-resume-screening-system-production-c250.up.railway.app/analytics'
       )
 
       const data = await response.json()
@@ -63,7 +63,7 @@ export default function HRDashboard() {
     try {
 
       const response = await fetch(
-        `https://ai-resume-screening-system-production-6bf1.up.railway.app/get-resumes?search=${search}`
+        `https://ai-resume-screening-system-production-c250.up.railway.app/get-resumes?search=${search}`
       )
 
       const data = await response.json()
@@ -109,7 +109,7 @@ export default function HRDashboard() {
     try {
 
       const response = await fetch(
-        'https://ai-resume-screening-system-production-6bf1.up.railway.app/upload-job-description',
+        'https://ai-resume-screening-system-production-c250.up.railway.app/upload-job-description',
         {
           method: 'POST',
           body: formData
@@ -139,7 +139,7 @@ export default function HRDashboard() {
     try {
 
       await fetch(
-        `https://ai-resume-screening-system-production-6bf1.up.railway.app/update-status/${id}`,
+        `https://ai-resume-screening-system-production-c250.up.railway.app/update-status/${id}`,
         {
           method: 'PUT',
           headers: {
@@ -168,7 +168,7 @@ const sendEmail = async (
   try {
 
     const response = await fetch(
-      'https://ai-resume-screening-system-production-6bf1.up.railway.app/send-email',
+      'https://ai-resume-screening-system-production-c250.up.railway.app/send-email',
       {
         method: 'POST',
         headers: {
@@ -203,7 +203,7 @@ const sendEmail = async (
     try {
 
       await fetch(
-        `https://ai-resume-screening-system-production-6bf1.up.railway.app/delete-resume/${id}`,
+        `https://ai-resume-screening-system-production-c250.up.railway.app/delete-resume/${id}`,
         {
           method: 'DELETE'
         }
