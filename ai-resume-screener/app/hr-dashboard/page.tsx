@@ -35,12 +35,14 @@ export default function HRDashboard() {
 
   }, [])
 
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ai-resume-screening-system-kvrt.onrender.com'
+
   const fetchAnalytics = async () => {
 
     try {
 
       const response = await fetch(
-        'https://ai-resume-screening-system-production-c250.up.railway.app/analytics'
+        `${API_BASE_URL}/analytics`
       )
 
       const data = await response.json()
@@ -63,7 +65,7 @@ export default function HRDashboard() {
     try {
 
       const response = await fetch(
-        `https://ai-resume-screening-system-production-c250.up.railway.app/get-resumes?search=${search}`
+        `${API_BASE_URL}/get-resumes?search=${search}`
       )
 
       const data = await response.json()
@@ -109,7 +111,7 @@ export default function HRDashboard() {
     try {
 
       const response = await fetch(
-        'https://ai-resume-screening-system-production-c250.up.railway.app/upload-job-description',
+        `${API_BASE_URL}/upload-job-description`,
         {
           method: 'POST',
           body: formData
@@ -139,7 +141,7 @@ export default function HRDashboard() {
     try {
 
       await fetch(
-        `https://ai-resume-screening-system-production-c250.up.railway.app/update-status/${id}`,
+        `${API_BASE_URL}/update-status/${id}`,
         {
           method: 'PUT',
           headers: {
@@ -168,7 +170,7 @@ const sendEmail = async (
   try {
 
     const response = await fetch(
-      'https://ai-resume-screening-system-production-c250.up.railway.app/send-email',
+      `${API_BASE_URL}/send-email`,
       {
         method: 'POST',
         headers: {
@@ -203,7 +205,7 @@ const sendEmail = async (
     try {
 
       await fetch(
-        `https://ai-resume-screening-system-production-c250.up.railway.app/delete-resume/${id}`,
+        `${API_BASE_URL}/delete-resume/${id}`,
         {
           method: 'DELETE'
         }

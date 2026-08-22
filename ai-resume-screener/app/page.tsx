@@ -28,7 +28,8 @@ export default function Home() {
 
       setLoading(true)
 
-      const response = await fetch('https://ai-resume-screening-system-production-c250.up.railway.app/upload-resume', {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ai-resume-screening-system-kvrt.onrender.com'
+      const response = await fetch(`${API_BASE_URL}/upload-resume`, {
         method: 'POST',
         body: formData
       })

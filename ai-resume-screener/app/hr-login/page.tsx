@@ -22,7 +22,8 @@ export default function HRLogin() {
 
       setLoading(true)
 
-      const response = await fetch('https://ai-resume-screening-system-production-c250.up.railway.app/hr-login', {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ai-resume-screening-system-kvrt.onrender.com'
+      const response = await fetch(`${API_BASE_URL}/hr-login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
